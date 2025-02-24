@@ -1,10 +1,8 @@
 package org.example.dz18.service;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.dz18.exceptions.UserNotFoundException;
-import org.example.dz18.models.Address;
 import org.example.dz18.models.User;
 import org.example.dz18.repo.UserRepository;
 import org.springframework.stereotype.Service;
@@ -48,5 +46,7 @@ public class UserService {
         repository.delete(user);
         return user;
     }
+
+
 
 }
