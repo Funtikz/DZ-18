@@ -4,42 +4,47 @@ import lombok.RequiredArgsConstructor;
 import org.example.dz18.exceptions.UserNotFoundException;
 import org.example.dz18.models.User;
 import org.example.dz18.service.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/user/")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService service;
+    private final UserService userService;
 
-    @GetMapping("/find-all")
-    public ResponseEntity<List<User>> findAll(){
-        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
+    @GetMapping
+    public String getAllUsers(Model model) {
+        List<User> users = userService.getAll();
+        model.addAttribute("users", users);
+        return "user-list";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable("id") Long id) throws UserNotFoundException {
-        return  new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+    @GetMapping("/create")
+    public String createUserForm(Model model) {
+        model.addAttribute("user", new User());
+        return "user-form";
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<User> create(@RequestBody User user){
-        return  new ResponseEntity<>(service.createUser(user), HttpStatus.OK);
+    @PostMapping("/save")
+    public String saveUser(@ModelAttribute User user) {
+        userService.createUser(user);
+        return "redirect:/users";
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<User> update(@PathVariable("id") Long id, @RequestBody User user) throws UserNotFoundException {
-        return new ResponseEntity<>(service.updateUser(id, user), HttpStatus.OK);
+    @GetMapping("/edit/{id}")
+    public String editUser(@PathVariable Long id, Model model) throws UserNotFoundException {
+        User user = userService.findById(id);
+        model.addAttribute("user", user);
+        return "user-form";
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<User> delete(@PathVariable("id") Long id) throws UserNotFoundException {
-        return new ResponseEntity<>(service.deleteUser(id), HttpStatus.OK);
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable Long id) throws UserNotFoundException {
+        userService.deleteUser(id);
+        return "redirect:/users";
     }
-
 }
