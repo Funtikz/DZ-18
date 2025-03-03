@@ -28,6 +28,7 @@
     </scm>
     <properties>
         <java.version>21</java.version>
+        <allure.version>2.13.2</allure.version>
     </properties>
     <dependencies>
         <dependency>
@@ -82,6 +83,13 @@
             <version>5.5.1</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit5</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
+
 
     </dependencies>
 

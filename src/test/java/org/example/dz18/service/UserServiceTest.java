@@ -1,5 +1,6 @@
 package org.example.dz18.service;
 
+import io.qameta.allure.*;
 import org.example.dz18.exceptions.UserNotFoundException;
 import org.example.dz18.models.Address;
 import org.example.dz18.models.User;
@@ -20,6 +21,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+@Epic("User Service Tests")
+@Feature("User Management")
 @SpringBootTest
 class UserServiceTest {
 
@@ -35,6 +38,8 @@ class UserServiceTest {
     }
 
     @Test
+    @Story("Find User by ID")
+    @Description("Проверка поиска пользователя по ID, когда пользователь существует")
     void findById() throws UserNotFoundException {
         User mockUser = new User(1L, "Василий", "Нарожний", 20,
                 new Address(1L, "Гагарина 2", "Волгодонск"));
@@ -46,6 +51,8 @@ class UserServiceTest {
     }
 
     @Test
+    @Story("Find User by ID")
+    @Description("Проверка ошибки при поиске пользователя, если его нет в базе")
     void findByIdError() {
         when(repository.findById(any())).thenReturn(Optional.empty());
 
@@ -54,18 +61,23 @@ class UserServiceTest {
     }
 
     @Test
+    @Story("Get All Users")
+    @Description("Проверка получения списка всех пользователей")
     void getAll() {
         User mockUser1 = new User(1L, "Василий", "Нарожний", 20,
                 new Address(1L, "Гагарина 2", "Волгодонск"));
-        User mockUse2 = new User(2L, "Никита", "Нарожний", 30,
+        User mockUser2 = new User(2L, "Никита", "Нарожний", 30,
                 new Address(2L, "Гагарина 2", "Волгодонск"));
-        List<User> users = List.of(mockUser1, mockUse2);
+        List<User> users = List.of(mockUser1, mockUser2);
         when(repository.findAll()).thenReturn(users);
+
         List<User> result = userService.getAll();
         assertEquals(2, result.size());
     }
 
     @Test
+    @Story("Get All Users")
+    @Description("Проверка возврата пустого списка, если пользователей нет в базе")
     void getAllReturnsEmptyListWhenNoUsers() {
         when(repository.findAll()).thenReturn(Arrays.asList());
 
@@ -73,7 +85,10 @@ class UserServiceTest {
 
         assertEquals(0, result.size());
     }
+
     @Test
+    @Story("Create User")
+    @Description("Проверка создания нового пользователя")
     void createUserReturnsSavedUser() {
         User user = new User(null, "Василий", "Нарожний", 30, null);
 
@@ -88,6 +103,8 @@ class UserServiceTest {
     }
 
     @Test
+    @Story("Delete User")
+    @Description("Проверка удаления пользователя")
     void deleteUserReturnsDeletedUser() throws UserNotFoundException {
         Long userId = 1L;
         User user = new User(userId, "Василий", "Нарожний", 30, null);
@@ -98,5 +115,4 @@ class UserServiceTest {
 
         assertEquals(user, result);
     }
-
 }
